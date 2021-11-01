@@ -1,7 +1,8 @@
-package com.begers.ulkeler
+package com.begers.ulkeler.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.begers.ulkeler.R
 
 class MainActivity : AppCompatActivity() {
 
