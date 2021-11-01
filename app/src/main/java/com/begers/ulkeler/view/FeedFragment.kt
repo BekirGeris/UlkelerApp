@@ -6,8 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.begers.ulkeler.R
+import com.begers.ulkeler.adapter.CountryAdapter
+import com.begers.ulkeler.viewmodel.FeedViewModel
 
 class FeedFragment : Fragment() {
+
+    private lateinit var viewModel: FeedViewModel
+    private val countryAdapter = CountryAdapter(arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
