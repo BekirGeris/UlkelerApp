@@ -3,22 +3,46 @@ package com.begers.ulkeler.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.begers.ulkeler.model.Country
+import com.begers.ulkeler.service.CountryAPIService
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 
 class FeedViewModel : ViewModel() {
+
+    private val countryAPIService = CountryAPIService()
+    private val disposable = CompositeDisposable()
     val countries = MutableLiveData<List<Country>>()
     val countryError = MutableLiveData<Boolean>()
     val countryLoading = MutableLiveData<Boolean>()
 
     fun refreshData() {
-        val county = Country("Turkey", "Asia", "Ankara", "TRY", "Türkçe", "imageUrl")
-        val county2 = Country("Fransa", "Avrupa", "Paris", "Euro", "Fransızça", "imageUrl2")
-        val county3 = Country("Almanya", "Avrupa", "Berlin", "Euro", "Almanca", "imageUrl3")
+        getDataFromAPI()
+    }
 
-        val countryList = arrayListOf<Country>(county, county2, county3)
+    private fun getDataFromAPI(){
+        countryLoading.value = true
 
-        countries.value = countryList
-        countryError.value = false
-        countryLoading.value = false
+        disposable.add(countryAPIService.getData()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(object : DisposableSingleObserver<List<Country>>() {
+                    override fun onSuccess(t: List<Country>) {
+                        countries.value = t
+                        countryLoading.value = false
+                        countryError.value = false
+                    }
+
+                    override fun onError(e: Throwable) {
+                        countryLoading.value = false
+                        countryError.value = true
+                        e.printStackTrace()
+                    }
+
+                })
+        )
     }
 
 }
