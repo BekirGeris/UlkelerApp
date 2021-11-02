@@ -7,6 +7,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.begers.ulkeler.R
 import com.begers.ulkeler.model.Country
+import com.begers.ulkeler.util.downloadFromUrl
+import com.begers.ulkeler.util.placeHolderProgressBar
 import com.begers.ulkeler.view.FeedFragmentDirections
 import kotlinx.android.synthetic.main.item_country.view.*
 
@@ -30,6 +32,8 @@ class CountryAdapter(val countryList: ArrayList<Country>) : RecyclerView.Adapter
             val action = FeedFragmentDirections.actionFeedFragmentToCountryFragment()
             Navigation.findNavController(it).navigate(action)
         }
+
+        holder.view.imageView.downloadFromUrl(countryList.get(position).imagerl, placeHolderProgressBar(holder.view.context))
     }
 
     override fun getItemCount(): Int {
